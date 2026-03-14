@@ -28,7 +28,6 @@ const routes = [
       },
       {
         path: 'houses',
-        path: 'houses',
         name: 'HouseList',
         component: HouseListView
       },

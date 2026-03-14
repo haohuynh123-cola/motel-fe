@@ -18,7 +18,7 @@ const onFinish = async (values) => {
     loading.value = true;
     await authService.login(values.username, values.password);
     message.success('Đăng nhập thành công!');
-    router.push('/');
+    router.push('/dashboard');
   } catch (error) {
     message.error('Tài khoản hoặc mật khẩu không chính xác!');
   } finally {

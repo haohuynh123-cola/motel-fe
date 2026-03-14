@@ -7,8 +7,8 @@ export default {
       password
     });
     // Lưu token vào localStorage để dùng cho các request sau
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
+    if (response.data.status) {
+      localStorage.setItem('token', response.data.data.token);
     }
     return response.data;
   },
