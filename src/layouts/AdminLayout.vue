@@ -3,20 +3,20 @@ import { ref, computed } from 'vue';
 import { useRouter, useRoute, RouterLink } from 'vue-router';
 import authService from '../api/authService';
 import Sidebar from '../components/Sidebar.vue';
-import { 
-  UserOutlined, 
+import {
+  UserOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   BellOutlined,
-  HomeOutlined
+  HomeOutlined,
+  HeartFilled
 } from '@ant-design/icons-vue';
 
 const router = useRouter();
 const route = useRoute();
 const collapsed = ref(false);
 
-// Tự động tạo breadcrumbs từ route hiện tại
 const breadcrumbs = computed(() => {
   const pathArray = route.path.split('/').filter((i) => i);
   const crumbs = pathArray.map((path, index) => {
@@ -27,7 +27,7 @@ const breadcrumbs = computed(() => {
     if (path === 'contracts') label = 'Hợp đồng';
     if (path === 'customers') label = 'Khách thuê';
     if (path === 'users') label = 'Người dùng';
-    
+
     return { label, url };
   });
   return crumbs;
@@ -40,20 +40,20 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <a-layout class="h-screen overflow-hidden"> <!-- Khóa cuộn toàn trang -->
+  <a-layout class="h-screen overflow-hidden">
     <!-- Sidebar Component -->
     <Sidebar :collapsed="collapsed" />
 
-    <a-layout class="flex flex-col h-screen"> <!-- Layout bên phải cao bằng màn hình -->
-      <!-- Header cố định -->
-      <a-layout-header class="!bg-white px-6 flex justify-between items-center shadow-sm z-10 h-16 flex-shrink-0 border-b border-gray-100">
+    <a-layout class="flex flex-col h-screen">
+      <!-- Header -->
+      <a-layout-header class="!bg-white px-4 flex justify-between items-center shadow-sm z-10 h-16 flex-shrink-0 border-b border-gray-100">
         <div class="flex items-center gap-6">
-          <div @click="() => (collapsed = !collapsed)" 
+          <div @click="() => (collapsed = !collapsed)"
                class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 cursor-pointer transition-colors duration-200">
             <menu-unfold-outlined v-if="collapsed" class="text-lg text-gray-600" />
             <menu-fold-outlined v-else class="text-lg text-gray-600" />
           </div>
-          
+
           <a-breadcrumb class="hidden md:flex">
             <a-breadcrumb-item>
               <router-link to="/" class="hover:text-blue-500 transition-colors">
@@ -67,19 +67,17 @@ const handleLogout = () => {
             </a-breadcrumb-item>
           </a-breadcrumb>
         </div>
-        
-        <div class="flex items-center gap-4">
-          <a-badge :count="5" size="small" :offset="[-2, 2]">
+
+        <div class="flex items-center gap-4 pr-5">
+          <a-badge :count="5" size="small" :offset="[-10, 10]">
             <div class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 cursor-pointer transition-colors duration-200 group">
               <BellOutlined class="text-xl text-gray-500 group-hover:text-blue-500" />
             </div>
           </a-badge>
 
           <a-dropdown :trigger="['click']">
-            <div class="flex items-center cursor-pointer transition-all duration-200 group p-1">
-              <a-badge dot color="#52c41a" :offset="[-4, 32]">
+            <div class="flex items-center cursor-pointer transition-all duration-200 group pr-2 ps-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
                 <a-avatar size="large" class="bg-blue-500 shadow-sm border-2 border-white">A</a-avatar>
-              </a-badge>
               <div class="ml-3 hidden sm:block">
                 <span class="text-sm font-bold text-gray-700 block leading-none">Quản trị viên</span>
               </div>
@@ -103,18 +101,20 @@ const handleLogout = () => {
         </div>
       </a-layout-header>
 
-      <!-- Main Content - Vùng cuộn duy nhất -->
-      <a-layout-content class="flex-1 overflow-y-auto bg-[#f8fafc] p-6 custom-scrollbar">
-        <div class="bg-white p-8 rounded-3xl shadow-sm min-h-full border border-gray-100/50">
-          <router-view />
-        </div>
-      </a-layout-content>
+      <!-- Scrollable Area -->
+      <div class="flex-1 overflow-y-auto bg-[#f8fafc] custom-scrollbar flex flex-col">
+        <!-- Content Area -->
+        <a-layout-content class="p-6 flex-shrink-0">
+          <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100/50">
+            <router-view />
+          </div>
+        </a-layout-content>
+      </div>
     </a-layout>
   </a-layout>
 </template>
 
 <style scoped>
-/* Tùy chỉnh thanh cuộn cho đẹp hơn */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -128,4 +128,9 @@ const handleLogout = () => {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #cbd5e1;
 }
+
+ .ant-layout .ant-layout-header{
+  padding-inline:0 !important
+ }
+
 </style>
