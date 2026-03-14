@@ -29,6 +29,7 @@ watch(() => route.name, (newName) => {
 });
 
 const handleMenuClick = ({ key }) => {
+  // Vì các route trong manage đều nằm dưới /manage, ta chỉ cần truyền name
   router.push({ name: key });
 };
 </script>

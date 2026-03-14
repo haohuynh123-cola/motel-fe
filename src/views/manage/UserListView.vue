@@ -64,13 +64,13 @@ onMounted(() => {
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold m-0">Quản lý người dùng</h2>
       <div class="flex gap-2">
-        <a-button type="default">
+        <a-button type="default" class="inline-flex items-center">
           <template #icon><UserAddOutlined /></template>
-          Thêm người dùng
+          <span>Thêm người dùng</span>
         </a-button>
-        <a-button type="primary" @click="fetchUsers" :loading="loading">
+        <a-button type="primary" @click="fetchUsers" :loading="loading" class="inline-flex items-center">
           <template #icon><SyncOutlined /></template>
-          Làm mới
+          <span>Làm mới</span>
         </a-button>
       </div>
     </div>

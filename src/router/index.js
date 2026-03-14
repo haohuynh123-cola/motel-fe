@@ -1,67 +1,83 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import AdminLayout from '../layouts/AdminLayout.vue';
+import CustomerLayout from '../layouts/CustomerLayout.vue';
+import ManageLayout from '../layouts/ManageLayout.vue';
 import LoginView from '../views/LoginView.vue';
-import HouseListView from '../views/HouseListView.vue';
-import DashboardView from '../views/DashboardView.vue';
 import authService from '../api/authService';
 
 const routes = [
+  // --- Phân hệ Khách hàng (Public) ---
+  {
+    path: '/',
+    component: CustomerLayout,
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        redirect: '/explore'
+      },
+      {
+        path: 'explore',
+        name: 'Explore',
+        component: () => import('../views/customer/ExploreView.vue')
+      }
+    ]
+  },
+
+  // --- Auth ---
   {
     path: '/login',
     name: 'Login',
     component: LoginView,
     meta: { requiresAuth: false }
   },
+
+  // --- Phân hệ Quản lý (Protected) ---
   {
-    path: '/',
-    component: AdminLayout,
+    path: '/manage',
+    component: ManageLayout,
     meta: { requiresAuth: true },
     children: [
       {
         path: '',
         name: 'Dashboard',
-        component: DashboardView
-      },
-      {
-        path: 'dashboard',
-        redirect: '/'
+        component: () => import('../views/manage/DashboardView.vue')
       },
       {
         path: 'houses',
         name: 'HouseList',
-        component: HouseListView
+        component: () => import('../views/manage/HouseListView.vue')
       },
       {
         path: 'houses/:id/rooms',
         name: 'HouseRooms',
-        component: () => import('../views/RoomListView.vue'),
+        component: () => import('../views/manage/RoomListView.vue'),
         props: true,
       },
       {
         path: 'houses/:id/contracts',
         name: 'HouseContracts',
-        component: () => import('../views/ContractListView.vue'),
+        component: () => import('../views/manage/ContractListView.vue'),
         props: true,
       },
       {
         path: 'contracts',
         name: 'ContractList',
-        component: () => import('../views/ContractListView.vue'),
+        component: () => import('../views/manage/ContractListView.vue'),
       },
       {
         path: 'customers',
         name: 'CustomerList',
-        component: () => import('../views/CustomerListView.vue'),
+        component: () => import('../views/manage/CustomerListView.vue'),
       },
       {
         path: 'users',
         name: 'UserList',
-        component: () => import('../views/UserListView.vue'),
+        component: () => import('../views/manage/UserListView.vue'),
       },
       {
         path: 'settings',
         name: 'Settings',
-        component: HouseListView, // Placeholder
+        component: () => import('../views/manage/HouseListView.vue'), // Placeholder
       }
     ]
   }
@@ -72,14 +88,14 @@ const router = createRouter({
   routes,
 });
 
-// Navigation Guard: Bảo vệ các route yêu cầu đăng nhập
+// Navigation Guard
 router.beforeEach((to, from, next) => {
   const isAuthenticated = authService.isAuthenticated();
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login');
   } else if (to.path === '/login' && isAuthenticated) {
-    next('/');
+    next('/manage');
   } else {
     next();
   }

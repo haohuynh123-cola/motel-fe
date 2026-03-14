@@ -61,11 +61,11 @@ const fetchRooms = async () => {
 };
 
 const goBack = () => {
-  router.push('/houses');
+  router.push('/manage/houses');
 };
 
 const viewContracts = () => {
-  router.push(`/houses/${houseId}/contracts`);
+  router.push(`/manage/houses/${houseId}/contracts`);
 };
 
 onMounted(() => {
@@ -77,19 +77,19 @@ onMounted(() => {
   <div>
     <div class="flex justify-between items-center mb-6">
       <div class="flex items-center gap-4">
-        <a-button @click="goBack">
+        <a-button @click="goBack" class="inline-flex items-center justify-center">
           <template #icon><ArrowLeftOutlined /></template>
         </a-button>
         <h2 class="text-2xl font-bold m-0">Danh sách phòng</h2>
       </div>
       <div class="flex gap-2">
-        <a-button @click="viewContracts" type="default">
+        <a-button @click="viewContracts" type="default" class="inline-flex items-center">
           <template #icon><FileTextOutlined /></template>
-          Xem hợp đồng nhà này
+          <span>Xem hợp đồng nhà này</span>
         </a-button>
-        <a-button type="primary" @click="fetchRooms" :loading="loading">
+        <a-button type="primary" @click="fetchRooms" :loading="loading" class="inline-flex items-center">
           <template #icon><SyncOutlined /></template>
-          Làm mới
+          <span>Làm mới</span>
         </a-button>
       </div>
     </div>

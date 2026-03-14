@@ -71,7 +71,7 @@ onMounted(() => {
         <h2 class="text-2xl font-extrabold text-gray-800 m-0">Bảng điều khiển</h2>
         <p class="text-gray-500 mt-1">Chào mừng bạn trở lại, đây là tình hình kinh doanh hôm nay.</p>
       </div>
-      <a-button type="primary" class="h-10 rounded-lg flex items-center shadow-md shadow-blue-100">
+      <a-button type="primary" class="h-10 rounded-lg inline-flex items-center shadow-md shadow-blue-100">
         <template #icon><RiseOutlined /></template>
         <span class="ml-1">Xem báo cáo chi tiết</span>
       </a-button>

@@ -76,9 +76,9 @@ const fetchContracts = async () => {
 
 const goBack = () => {
   if (houseId) {
-    router.push(`/houses/${houseId}/rooms`);
+    router.push(`/manage/houses/${houseId}/rooms`);
   } else {
-    router.push('/houses');
+    router.push('/manage/houses');
   }
 };
 
@@ -91,16 +91,16 @@ onMounted(() => {
   <div>
     <div class="flex justify-between items-center mb-6">
       <div class="flex items-center gap-4">
-        <a-button @click="goBack">
+        <a-button @click="goBack" class="inline-flex items-center justify-center">
           <template #icon><ArrowLeftOutlined /></template>
         </a-button>
         <h2 class="text-2xl font-bold m-0">
           {{ isGeneralView ? 'Tất cả hợp đồng' : 'Hợp đồng của nhà' }}
         </h2>
       </div>
-      <a-button type="primary" @click="fetchContracts" :loading="loading">
+      <a-button type="primary" @click="fetchContracts" :loading="loading" class="inline-flex items-center">
         <template #icon><SyncOutlined /></template>
-        Làm mới
+        <span>Làm mới</span>
       </a-button>
     </div>
 

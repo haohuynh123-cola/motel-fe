@@ -93,11 +93,11 @@ onMounted(() => {
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold m-0">Quản lý khách thuê</h2>
       <div class="flex gap-2">
-        <a-button type="default">
+        <a-button type="default" class=" rounded-lg inline-flex items-center shadow-md shadow-blue-100">
           <template #icon><UserAddOutlined /></template>
           Thêm khách thuê
         </a-button>
-        <a-button type="primary" @click="fetchCustomers" :loading="loading">
+        <a-button type="primary" @click="fetchCustomers" :loading="loading" class=" rounded-lg inline-flex items-center shadow-md shadow-blue-100">
           <template #icon><SyncOutlined /></template>
           Làm mới
         </a-button>

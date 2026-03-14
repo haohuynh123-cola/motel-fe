@@ -13,7 +13,7 @@ const limit = ref(10);
 const total = ref(0);
 
 const goToRooms = (id) => {
-  router.push(`/houses/${id}/rooms`);
+  router.push(`/manage/houses/${id}/rooms`);
 };
 
 const columns = [
@@ -92,9 +92,9 @@ onMounted(() => {
   <div>
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold m-0">Danh sách Nhà Trọ</h2>
-      <a-button type="primary" @click="fetchHouses" :loading="loading">
+      <a-button type="primary" @click="fetchHouses" :loading="loading" class="inline-flex items-center">
         <template #icon><SyncOutlined /></template>
-        Làm mới
+        <span>Làm mới</span>
       </a-button>
     </div>
 
