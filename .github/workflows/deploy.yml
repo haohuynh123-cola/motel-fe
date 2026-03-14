@@ -19,6 +19,5 @@ jobs:
                           script: |
                                 cd /var/www/motel-fe # Đường dẫn thư mục FE trên server của bạn
                                 git pull origin master
-                                cd tro-go-fe
                                 docker compose up -d --build
                                 docker image prune -f
