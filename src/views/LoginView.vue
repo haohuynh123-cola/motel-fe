@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import authService from '../api/authService';
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+  import { reactive, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import authService from '../api/authService'
+  import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+  import { message } from 'ant-design-vue'
 
-const router = useRouter();
-const loading = ref(false);
+  const router = useRouter()
+  const loading = ref(false)
 
-const formState = reactive({
-  username: '',
-  password: '',
-});
+  const formState = reactive({
+    username: '',
+    password: '',
+  })
 
-const onFinish = async (values: any) => {
-  try {
-    loading.value = true;
-    await authService.login(values.username, values.password);
-    message.success('Đăng nhập thành công!');
-    router.push('/manage');
-
-  } catch (error) {
-    message.error('Tài khoản hoặc mật khẩu không chính xác!');
-  } finally {
-    loading.value = false;
+  const onFinish = async (values: any) => {
+    try {
+      loading.value = true
+      await authService.login(values.username, values.password)
+      message.success('Đăng nhập thành công!')
+      router.push('/manage')
+    } catch (error) {
+      message.error('Tài khoản hoặc mật khẩu không chính xác!')
+    } finally {
+      loading.value = false
+    }
   }
-};
 </script>
 
 <template>
@@ -36,12 +35,7 @@ const onFinish = async (values: any) => {
         <p class="mt-2 text-sm text-gray-600">Đăng nhập vào hệ thống quản lý</p>
       </div>
 
-      <a-form
-        :model="formState"
-        name="normal_login"
-        @finish="onFinish"
-        layout="vertical"
-      >
+      <a-form :model="formState" name="normal_login" @finish="onFinish" layout="vertical">
         <a-form-item
           label="Tài khoản"
           name="username"

@@ -1,62 +1,58 @@
-<script setup>
-import { ref, onMounted } from 'vue';
-import { message } from 'ant-design-vue';
-import { SyncOutlined, UserAddOutlined } from '@ant-design/icons-vue';
-import userService from '@/api/userService';
+<script setup lang="ts">
+  import { onMounted, computed } from 'vue'
+  import { message } from 'ant-design-vue'
+  import { SyncOutlined, UserAddOutlined } from '@ant-design/icons-vue'
+  import { useUsers } from '@/composables/useUsers'
+  import { formatDate } from '@/utils/format'
 
-const users = ref([]);
-const loading = ref(false);
+  const { loading, users, fetchUsers } = useUsers()
 
-const columns = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 80,
-  },
-  {
-    title: 'Tên đăng nhập',
-    dataIndex: 'username',
-    key: 'username',
-  },
-  {
-    title: 'Họ và tên',
-    dataIndex: 'full_name',
-    key: 'full_name',
-  },
-  {
-    title: 'Quyền hạn',
-    dataIndex: 'permissions',
-    key: 'permissions',
-  },
-  {
-    title: 'Ngày tạo',
-    dataIndex: 'created_at',
-    key: 'created_at',
-    customRender: ({ text }) => new Date(text).toLocaleDateString('vi-VN')
-  },
-];
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      width: 80,
+    },
+    {
+      title: 'Tên đăng nhập',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Họ và tên',
+      dataIndex: 'full_name',
+      key: 'full_name',
+    },
+    {
+      title: 'Quyền hạn',
+      dataIndex: 'permissions',
+      key: 'permissions',
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      customRender: ({ text }: { text: string }) => formatDate(text),
+    },
+  ]
 
-const fetchUsers = async () => {
-  try {
-    loading.value = true;
-    const response = await userService.getUsers();
-    if (response.status) {
-      users.value = (response.data || []).map(item => ({
-        ...item,
-        key: item.id
-      }));
+  const dataSource = computed(() =>
+    users.value.map((item) => ({
+      ...item,
+      key: item.id,
+    }))
+  )
+
+  const handleRefresh = async () => {
+    try {
+      await fetchUsers()
+    } catch (error) {
+      message.error('Lỗi tải danh sách người dùng!')
     }
-  } catch (error) {
-    message.error('Lỗi tải danh sách người dùng!');
-  } finally {
-    loading.value = false;
   }
-};
 
-onMounted(() => {
-  fetchUsers();
-});
+  onMounted(handleRefresh)
 </script>
 
 <template>
@@ -68,7 +64,12 @@ onMounted(() => {
           <template #icon><UserAddOutlined /></template>
           <span>Thêm người dùng</span>
         </a-button>
-        <a-button type="primary" @click="fetchUsers" :loading="loading" class="inline-flex items-center">
+        <a-button
+          type="primary"
+          @click="handleRefresh"
+          :loading="loading"
+          class="inline-flex items-center"
+        >
           <template #icon><SyncOutlined /></template>
           <span>Làm mới</span>
         </a-button>
@@ -77,7 +78,7 @@ onMounted(() => {
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
       <a-table
-        :dataSource="users"
+        :dataSource="dataSource"
         :columns="columns"
         :loading="loading"
         :pagination="{ pageSize: 10 }"

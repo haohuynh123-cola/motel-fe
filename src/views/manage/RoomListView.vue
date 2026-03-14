@@ -1,76 +1,71 @@
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { message } from 'ant-design-vue';
-import { SyncOutlined, ArrowLeftOutlined, FileTextOutlined } from '@ant-design/icons-vue';
-import roomService from '@/api/roomService';
+<script setup lang="ts">
+  import { onMounted, computed } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { message } from 'ant-design-vue'
+  import { SyncOutlined, ArrowLeftOutlined, FileTextOutlined } from '@ant-design/icons-vue'
+  import { useRooms } from '@/composables/useRooms'
+  import { formatCurrency } from '@/utils/format'
 
-const route = useRoute();
-const router = useRouter();
-const houseId = route.params.id;
+  const route = useRoute()
+  const router = useRouter()
+  const houseId = route.params.id as string
 
-const rooms = ref([]);
-const loading = ref(false);
+  const { loading, rooms, fetchRooms } = useRooms()
 
-const columns = [
-  {
-    title: 'Số phòng',
-    dataIndex: 'room_number',
-    key: 'room_number',
-  },
-  {
-    title: 'Tầng',
-    dataIndex: 'floor',
-    key: 'floor',
-  },
-  {
-    title: 'Giá thuê',
-    dataIndex: 'price',
-    key: 'price',
-    customRender: ({ text }) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(text)
-  },
-  {
-    title: 'Trạng thái',
-    dataIndex: 'is_available',
-    key: 'is_available',
-    customRender: ({ text }) => text ? 'Còn trống' : 'Đã thuê'
-  },
-  {
-    title: 'Thao tác',
-    key: 'action',
-    width: 200,
-    align: 'center'
-  },
-];
+  const columns = [
+    {
+      title: 'Số phòng',
+      dataIndex: 'room_number',
+      key: 'room_number',
+    },
+    {
+      title: 'Tầng',
+      dataIndex: 'floor',
+      key: 'floor',
+    },
+    {
+      title: 'Giá thuê',
+      dataIndex: 'price',
+      key: 'price',
+      customRender: ({ text }: { text: number }) => formatCurrency(text),
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'is_available',
+      key: 'is_available',
+    },
+    {
+      title: 'Thao tác',
+      key: 'action',
+      width: 200,
+      align: 'center',
+    },
+  ]
 
-const fetchRooms = async () => {
-  try {
-    loading.value = true;
-    const response = await roomService.getRoomsByHouse(houseId);
-    if (response.status) {
-      rooms.value = response.data.map(item => ({
-        ...item,
-        key: item.id
-      }));
+  const dataSource = computed(() =>
+    rooms.value.map((item) => ({
+      ...item,
+      key: item.id,
+    }))
+  )
+
+  const handleRefresh = async () => {
+    try {
+      await fetchRooms(houseId)
+    } catch (error) {
+      message.error('Lỗi tải danh sách phòng!')
     }
-  } catch (error) {
-    message.error('Lỗi tải danh sách phòng!');
-  } finally {
-    loading.value = false;
   }
-};
 
-const goBack = () => {
-  router.push('/manage/houses');
-};
+  const goBack = () => {
+    router.push('/manage/houses')
+  }
 
-const viewContracts = () => {
-  router.push(`/manage/houses/${houseId}/contracts`);
-};
+  const viewContracts = () => {
+    router.push(`/manage/houses/${houseId}/contracts`)
+  }
 
-onMounted(() => {
-  fetchRooms();
-});
+  onMounted(handleRefresh)
 </script>
 
 <template>
@@ -87,7 +82,12 @@ onMounted(() => {
           <template #icon><FileTextOutlined /></template>
           <span>Xem hợp đồng nhà này</span>
         </a-button>
-        <a-button type="primary" @click="fetchRooms" :loading="loading" class="inline-flex items-center">
+        <a-button
+          type="primary"
+          @click="handleRefresh"
+          :loading="loading"
+          class="inline-flex items-center"
+        >
           <template #icon><SyncOutlined /></template>
           <span>Làm mới</span>
         </a-button>
@@ -96,7 +96,7 @@ onMounted(() => {
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
       <a-table
-        :dataSource="rooms"
+        :dataSource="dataSource"
         :columns="columns"
         :loading="loading"
         :pagination="{ pageSize: 10 }"
@@ -108,7 +108,7 @@ onMounted(() => {
             </a-tag>
           </template>
           <template v-if="column.key === 'action'">
-             <a-button type="link">Chi tiết</a-button>
+            <a-button type="link">Chi tiết</a-button>
           </template>
         </template>
       </a-table>

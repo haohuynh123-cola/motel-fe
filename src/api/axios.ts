@@ -1,4 +1,4 @@
-import axios, { type InternalAxiosRequestConfig } from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios'
 
 // Tạo một bản instance của axios với cấu hình mặc định
 const apiClient = axios.create({
@@ -8,16 +8,17 @@ const apiClient = axios.create({
   timeout: 10000, // Timeout sau 10s
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
-});
+})
 
 // Bạn có thể thêm Interceptor ở đây để tự động đính kèm Token JWT sau này
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
   if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`
   }
-  return config;
-});
+  return config
+})
 
-export default apiClient;
+export default apiClient

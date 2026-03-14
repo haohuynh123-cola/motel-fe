@@ -1,28 +1,30 @@
-import apiClient from './axios';
+import apiClient from './axios'
 
 export interface LoginResponse {
-  token: string;
-  user?: any;
+  data: {
+    token: string
+  }
+  status: boolean
 }
 
 export default {
   async login(username: string, password: string): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>('/auth/login', {
       username,
-      password
-    });
+      password,
+    })
     // Lưu token vào localStorage để dùng cho các request sau
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
+    if (response.data.status) {
+      localStorage.setItem('token', response.data.data.token)
     }
-    return response.data;
+    return response.data
   },
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token')
   },
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
-  }
-};
+    return !!localStorage.getItem('token')
+  },
+}
