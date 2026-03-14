@@ -1,17 +1,16 @@
 import axios from 'axios';
 
-// Tạo một bản instance của axios với cấu hình mặc định
+// Lấy Base URL từ biến môi trường (Vite)
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
+
 const apiClient = axios.create({
-  // Tạm thời gọi vào cổng 8080 (Docker Backend)
-  // Nếu có domain thực tế, hãy đổi thành https://api.motel.codetoolkit.org/api/v1
-  baseURL: 'http://localhost:8080/api/v1',
-  timeout: 10000, // Timeout sau 10s
+  baseURL: baseURL,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Bạn có thể thêm Interceptor ở đây để tự động đính kèm Token JWT sau này
 apiClient.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token) {

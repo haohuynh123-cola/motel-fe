@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import AdminLayout from '../layouts/AdminLayout.vue';
 import LoginView from '../views/LoginView.vue';
 import HouseListView from '../views/HouseListView.vue';
+import DashboardView from '../views/DashboardView.vue';
 import authService from '../api/authService';
 
 const routes = [
@@ -19,12 +20,49 @@ const routes = [
       {
         path: '',
         name: 'Dashboard',
-        redirect: '/houses'
+        component: DashboardView
+      },
+      {
+        path: 'dashboard',
+        redirect: '/'
       },
       {
         path: 'houses',
+        path: 'houses',
         name: 'HouseList',
         component: HouseListView
+      },
+      {
+        path: 'houses/:id/rooms',
+        name: 'HouseRooms',
+        component: () => import('../views/RoomListView.vue'),
+        props: true,
+      },
+      {
+        path: 'houses/:id/contracts',
+        name: 'HouseContracts',
+        component: () => import('../views/ContractListView.vue'),
+        props: true,
+      },
+      {
+        path: 'contracts',
+        name: 'ContractList',
+        component: () => import('../views/ContractListView.vue'),
+      },
+      {
+        path: 'customers',
+        name: 'CustomerList',
+        component: () => import('../views/CustomerListView.vue'),
+      },
+      {
+        path: 'users',
+        name: 'UserList',
+        component: () => import('../views/UserListView.vue'),
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: HouseListView, // Placeholder
       }
     ]
   }
