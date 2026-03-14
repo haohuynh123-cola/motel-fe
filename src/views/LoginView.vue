@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import authService from '../api/authService';
@@ -13,7 +13,7 @@ const formState = reactive({
   password: '',
 });
 
-const onFinish = async (values) => {
+const onFinish = async (values: any) => {
   try {
     loading.value = true;
     await authService.login(values.username, values.password);
