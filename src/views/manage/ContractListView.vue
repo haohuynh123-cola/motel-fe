@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { SyncOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue';
-import contractService from '../api/contractService';
+import contractService from '@/api/contractService';
 
 const route = useRoute();
 const router = useRouter();

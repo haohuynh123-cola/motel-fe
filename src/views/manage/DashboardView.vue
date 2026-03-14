@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { 
-  HomeOutlined, 
-  TeamOutlined, 
-  FileProtectOutlined, 
+import {
+  HomeOutlined,
+  TeamOutlined,
+  FileProtectOutlined,
   DollarOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -11,7 +11,8 @@ import {
   ArrowUpOutlined,
   RiseOutlined
 } from '@ant-design/icons-vue';
-import dashboardService from '../api/dashboardService';
+import dashboardService from '@/api/dashboardService';
+
 
 const stats = ref([
   { title: 'Tổng nhà trọ', value: '0', icon: HomeOutlined, color: 'text-blue-500', bgColor: 'bg-blue-50', desc: 'Hệ thống quản lý' },
@@ -48,7 +49,7 @@ const fetchDashboardData = async () => {
       stats.value[1].value = data.total_contracts;
       stats.value[2].value = data.total_customers;
       stats.value[3].value = formatCurrency(data.total_revenue);
-      
+
       roomStats.value = data.room_stats;
     }
   } catch (error) {
@@ -76,10 +77,10 @@ onMounted(() => {
         <span class="ml-1">Xem báo cáo chi tiết</span>
       </a-button>
     </div>
-    
+
     <!-- Professional Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-      <div v-for="item in stats" :key="item.title" 
+      <div v-for="item in stats" :key="item.title"
            class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
         <div class="flex justify-between items-start mb-4">
           <div :class="['p-3 rounded-xl transition-colors group-hover:scale-110 duration-300', item.bgColor]">
@@ -110,7 +111,7 @@ onMounted(() => {
           <h3 class="text-lg font-bold text-gray-800 m-0">Trạng thái phòng trọ</h3>
           <a-tag color="blue" class="rounded-full px-3">Tháng này</a-tag>
         </div>
-        
+
         <div class="flex flex-col md:flex-row items-center gap-12">
           <div class="relative flex flex-col items-center">
             <a-progress
@@ -158,14 +159,14 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      
+
       <!-- Recent Activities -->
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-bold text-gray-800 m-0">Hoạt động</h3>
           <a href="#" class="text-blue-500 text-xs font-bold hover:underline">Xem tất cả</a>
         </div>
-        
+
         <a-timeline class="mt-4">
           <a-timeline-item color="#10b981">
             <template #dot><div class="w-2 h-2 rounded-full bg-emerald-500"></div></template>

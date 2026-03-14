@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import { SyncOutlined, UserAddOutlined } from '@ant-design/icons-vue';
-import userService from '../api/userService';
+import userService from '@/api/userService';
 
 const users = ref([]);
 const loading = ref(false);

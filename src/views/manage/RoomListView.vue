@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { SyncOutlined, ArrowLeftOutlined, FileTextOutlined } from '@ant-design/icons-vue';
-import roomService from '../api/roomService';
+import roomService from '@/api/roomService';
 
 const route = useRoute();
 const router = useRouter();

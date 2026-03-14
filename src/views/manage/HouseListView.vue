@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { SyncOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons-vue';
-import houseService from '../api/houseService';
+import houseService from '@/api/houseService';
 
 const router = useRouter();
 const houses = ref([]);

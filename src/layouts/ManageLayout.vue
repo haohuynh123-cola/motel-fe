@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter, useRoute, RouterLink } from 'vue-router';
-import authService from '../api/authService';
-import Sidebar from '../components/Sidebar.vue';
+import authService from '@/api/authService';
+import Sidebar from '@/components/Sidebar.vue';
 import { 
   UserOutlined, 
   LogoutOutlined,

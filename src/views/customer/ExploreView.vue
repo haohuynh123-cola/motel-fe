@@ -8,7 +8,7 @@ import {
   CheckCircleFilled,
   FireOutlined
 } from '@ant-design/icons-vue';
-import houseService from '../api/houseService';
+import houseService from '@/api/houseService';
 
 const houses = ref([]);
 const loading = ref(false);

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import CustomerLayout from '../layouts/CustomerLayout.vue';
-import ManageLayout from '../layouts/ManageLayout.vue';
-import LoginView from '../views/LoginView.vue';
-import authService from '../api/authService';
+import CustomerLayout from '@/layouts/CustomerLayout.vue';
+import ManageLayout from '@/layouts/ManageLayout.vue';
+import LoginView from '@/views/LoginView.vue';
+import authService from '@/api/authService';
 
 const routes = [
   // --- Phân hệ Khách hàng (Public) ---
@@ -18,7 +18,7 @@ const routes = [
       {
         path: 'explore',
         name: 'Explore',
-        component: () => import('../views/customer/ExploreView.vue')
+        component: () => import('@/views/customer/ExploreView.vue')
       }
     ]
   },
@@ -40,44 +40,44 @@ const routes = [
       {
         path: '',
         name: 'Dashboard',
-        component: () => import('../views/manage/DashboardView.vue')
+        component: () => import('@/views/manage/DashboardView.vue')
       },
       {
         path: 'houses',
         name: 'HouseList',
-        component: () => import('../views/manage/HouseListView.vue')
+        component: () => import('@/views/manage/HouseListView.vue')
       },
       {
         path: 'houses/:id/rooms',
         name: 'HouseRooms',
-        component: () => import('../views/manage/RoomListView.vue'),
+        component: () => import('@/views/manage/RoomListView.vue'),
         props: true,
       },
       {
         path: 'houses/:id/contracts',
         name: 'HouseContracts',
-        component: () => import('../views/manage/ContractListView.vue'),
+        component: () => import('@/views/manage/ContractListView.vue'),
         props: true,
       },
       {
         path: 'contracts',
         name: 'ContractList',
-        component: () => import('../views/manage/ContractListView.vue'),
+        component: () => import('@/views/manage/ContractListView.vue'),
       },
       {
         path: 'customers',
         name: 'CustomerList',
-        component: () => import('../views/manage/CustomerListView.vue'),
+        component: () => import('@/views/manage/CustomerListView.vue'),
       },
       {
         path: 'users',
         name: 'UserList',
-        component: () => import('../views/manage/UserListView.vue'),
+        component: () => import('@/views/manage/UserListView.vue'),
       },
       {
         path: 'settings',
         name: 'Settings',
-        component: () => import('../views/manage/HouseListView.vue'), // Placeholder
+        component: () => import('@/views/manage/HouseListView.vue'), // Placeholder
       }
     ]
   }
