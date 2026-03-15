@@ -102,7 +102,8 @@
           total: total,
           showSizeChanger: true,
           pageSizeOptions: ['5', '10', '20', '50'],
-          showTotal: (totalCount) => `Tổng cộng ${totalCount} khách thuê`,
+          showTotal: (totalCount: number) => `Tổng cộng ${totalCount} khách thuê`,
+
         }"
         @change="handleTableChange"
       >

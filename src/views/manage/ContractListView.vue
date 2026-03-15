@@ -51,7 +51,7 @@
   ]
 
   const dataSource = computed(() =>
-    contracts.value.map((item) => ({
+    contracts.value.map((item: any) => ({
       ...item,
       key: item.id,
     }))
