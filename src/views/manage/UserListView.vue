@@ -4,7 +4,7 @@
   import { SyncOutlined, UserAddOutlined } from '@ant-design/icons-vue'
   import { useUsers } from '@/composables/useUsers'
   import { formatDate } from '@/utils/format'
-  import AppTable from '@/components/AppTable.vue'
+  import AppTable from '@/components/shared/AppTable.vue'
 
   const { loading, users, fetchUsers } = useUsers()
 

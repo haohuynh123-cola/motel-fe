@@ -8,7 +8,7 @@
     DeleteOutlined,
   } from '@ant-design/icons-vue'
   import { useCustomers } from '@/composables/useCustomers'
-  import AppTable from '@/components/AppTable.vue'
+  import AppTable from '@/components/shared/AppTable.vue'
 
   const { loading, customers, page, limit, total, fetchCustomers } = useCustomers()
 

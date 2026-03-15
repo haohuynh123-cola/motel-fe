@@ -5,7 +5,7 @@
   import { SyncOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
   import { useContracts } from '@/composables/useContracts'
   import { formatCurrency, formatDate } from '@/utils/format'
-  import AppTable from '@/components/AppTable.vue'
+  import AppTable from '@/components/shared/AppTable.vue'
 
   const route = useRoute()
   const router = useRouter()

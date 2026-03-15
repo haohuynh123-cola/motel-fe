@@ -11,6 +11,12 @@
   const props = defineProps<Props>()
   const emit = defineEmits(['change'])
 
+  // Định nghĩa slots cho TypeScript
+  defineSlots<{
+    bodyCell(props: { column: any; record: any; index: number; text: any; value: any }): any
+    headerCell(props: { column: any; title: string }): any
+  }>()
+
   const mergedPagination = computed(() => {
     if (props.pagination === false) return false
 
