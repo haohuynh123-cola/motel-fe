@@ -5,6 +5,7 @@
   import { SyncOutlined, ArrowLeftOutlined } from '@ant-design/icons-vue'
   import { useContracts } from '@/composables/useContracts'
   import { formatCurrency, formatDate } from '@/utils/format'
+  import AppTable from '@/components/AppTable.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -99,18 +100,13 @@
     </div>
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
-      <a-table
-        :dataSource="dataSource"
-        :columns="columns"
-        :loading="loading"
-        :pagination="{ pageSize: 10 }"
-      >
+      <AppTable :dataSource="dataSource" :columns="columns" :loading="loading">
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'status'">
             <a-tag color="blue">{{ record.status }}</a-tag>
           </template>
         </template>
-      </a-table>
+      </AppTable>
     </a-card>
   </div>
 </template>

@@ -4,6 +4,7 @@
   import { SyncOutlined, UserAddOutlined } from '@ant-design/icons-vue'
   import { useUsers } from '@/composables/useUsers'
   import { formatDate } from '@/utils/format'
+  import AppTable from '@/components/AppTable.vue'
 
   const { loading, users, fetchUsers } = useUsers()
 
@@ -77,12 +78,7 @@
     </div>
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
-      <a-table
-        :dataSource="dataSource"
-        :columns="columns"
-        :loading="loading"
-        :pagination="{ pageSize: 10 }"
-      >
+      <AppTable :dataSource="dataSource" :columns="columns" :loading="loading">
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'permissions'">
             <div class="flex flex-wrap gap-1">
@@ -90,7 +86,7 @@
             </div>
           </template>
         </template>
-      </a-table>
+      </AppTable>
     </a-card>
   </div>
 </template>

@@ -20,10 +20,8 @@
   const route = useRoute()
   const router = useRouter()
 
-  // selectedKeys sẽ dựa trên name của route hiện tại
   const selectedKeys = ref<string[]>([route.name as string])
 
-  // Cập nhật highlight menu khi URL thay đổi
   watch(
     () => route.name,
     (newName) => {
@@ -41,88 +39,81 @@
     :collapsed="props.collapsed"
     :trigger="null"
     collapsible
-    theme="dark"
-    width="260px"
-    class="shadow-xl z-20 min-h-screen"
+    theme="light"
+    :width="260"
+    :collapsed-width="80"
+    class="sidebar-emerald shadow-sm z-30 h-screen fixed left-0 top-0 bottom-0"
   >
-    <!-- Logo -->
+    <!-- Logo Emerald Style -->
     <div
-      class="h-16 flex items-center justify-center m-4 rounded-xl bg-white/10 transition-all duration-300 overflow-hidden backdrop-blur-sm border border-white/5"
+      class="h-16 flex items-center justify-center m-4 rounded-xl bg-emerald-600 transition-all duration-300 overflow-hidden"
     >
       <div v-if="!props.collapsed" class="flex items-center gap-3 w-full px-4 justify-start">
         <div
-          class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shrink-0 font-bold text-lg"
+          class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-lg border border-white/10"
         >
           T
         </div>
-        <span class="text-white text-lg font-bold tracking-wide truncate">Tro-Go</span>
+        <span class="text-white text-lg font-bold tracking-tight truncate">Tro-Go</span>
       </div>
       <div
         v-else
-        class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg font-bold text-lg"
+        class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white font-bold text-lg border border-white/10"
       >
         T
       </div>
     </div>
 
-    <!-- Menu -->
-    <div class="px-3 mt-6">
-      <p
-        v-if="!props.collapsed"
-        class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4 transition-all duration-300"
-      >
-        Menu Chính
-      </p>
+    <!-- Menu Emerald Style -->
+    <div class="px-3 mt-4 custom-menu-container">
       <a-menu
         v-model:selectedKeys="selectedKeys"
-        theme="dark"
+        theme="light"
         mode="inline"
-        class="border-r-0 bg-transparent rounded-lg"
-        :style="{ padding: '0' }"
+        class="border-r-0 bg-transparent"
         @click="handleMenuClick"
       >
         <a-menu-item key="Dashboard" class="rounded-lg mb-1">
-          <template #icon>
-            <DashboardOutlined class="text-lg" />
-          </template>
-          <span class="font-medium">Tổng quan</span>
+          <template #icon><DashboardOutlined class="text-lg" /></template>
+          <span class="font-semibold text-slate-700">Tổng quan</span>
         </a-menu-item>
 
-        <a-menu-item key="HouseList" class="rounded-lg mb-1">
-          <template #icon>
-            <HomeOutlined class="text-lg" />
+        <a-menu-item-group key="g1">
+          <template #title v-if="!props.collapsed">
+            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest pl-4">
+              Quản lý tài sản
+            </span>
           </template>
-          <span class="font-medium">Quản lý Nhà trọ</span>
-        </a-menu-item>
+          <a-menu-item key="HouseList" class="rounded-lg mb-1">
+            <template #icon><HomeOutlined class="text-lg" /></template>
+            <span class="font-medium text-slate-600">Nhà trọ</span>
+          </a-menu-item>
+          <a-menu-item key="ContractList" class="rounded-lg mb-1">
+            <template #icon><FileProtectOutlined class="text-lg" /></template>
+            <span class="font-medium text-slate-600">Hợp đồng</span>
+          </a-menu-item>
+        </a-menu-item-group>
 
-        <a-menu-item key="ContractList" class="rounded-lg mb-1">
-          <template #icon>
-            <FileProtectOutlined class="text-lg" />
+        <a-menu-item-group key="g2">
+          <template #title v-if="!props.collapsed">
+            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest pl-4">
+              Đối tác & Nhân sự
+            </span>
           </template>
-          <span class="font-medium">Hợp đồng</span>
-        </a-menu-item>
+          <a-menu-item key="CustomerList" class="rounded-lg mb-1">
+            <template #icon><TeamOutlined class="text-lg" /></template>
+            <span class="font-medium text-slate-600">Khách thuê</span>
+          </a-menu-item>
+          <a-menu-item key="UserList" class="rounded-lg mb-1">
+            <template #icon><UserOutlined class="text-lg" /></template>
+            <span class="font-medium text-slate-600">Người dùng</span>
+          </a-menu-item>
+        </a-menu-item-group>
 
-        <a-menu-item key="CustomerList" class="rounded-lg mb-1">
-          <template #icon>
-            <TeamOutlined class="text-lg" />
-          </template>
-          <span class="font-medium">Khách thuê</span>
-        </a-menu-item>
-
-        <a-menu-item key="UserList" class="rounded-lg mb-1">
-          <template #icon>
-            <UserOutlined class="text-lg" />
-          </template>
-          <span class="font-medium">Người dùng</span>
-        </a-menu-item>
-
-        <a-menu-divider v-if="!props.collapsed" class="my-4 border-gray-700 transition-all duration-300" />
-
-        <a-menu-item key="Settings" class="rounded-lg mb-1">
-          <template #icon>
-            <SettingOutlined class="text-lg" />
-          </template>
-          <span class="font-medium">Cài đặt</span>
+        <a-menu-divider class="my-4 mx-4 opacity-50" />
+        <a-menu-item key="Settings" class="rounded-lg">
+          <template #icon><SettingOutlined class="text-lg" /></template>
+          <span class="font-medium text-slate-600">Hệ thống</span>
         </a-menu-item>
       </a-menu>
     </div>
@@ -130,26 +121,51 @@
 </template>
 
 <style scoped>
-  /* Customizing Ant Design Menu styles to be more modern */
-  :deep(.ant-menu-dark.ant-menu-inline .ant-menu-item) {
-    width: calc(100% - 16px);
-    margin-inline: 8px;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  .sidebar-emerald {
+    background: #ffffff;
+    border-right: 1px solid #f1f5f9;
   }
 
-  :deep(.ant-menu-dark.ant-menu-inline .ant-menu-item-selected) {
-    background-color: #1677ff !important;
-    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+  :deep(.ant-menu-item) {
+    height: 44px !important;
+    line-height: 44px !important;
+    margin-inline: 8px !important;
+    width: calc(100% - 16px) !important;
   }
 
-  :deep(.ant-menu-dark .ant-menu-item:hover:not(.ant-menu-item-selected)) {
-    background-color: rgba(255, 255, 255, 0.1);
+  :deep(.ant-menu-item-selected) {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
   }
 
-  /* Sider customization */
-  :deep(.ant-layout-sider) {
-    background: #001529; /* Deep dark blue */
-    background: linear-gradient(180deg, #001529 0%, #000c17 100%);
+  :deep(.ant-menu-item-selected .ant-menu-item-icon) {
+    color: #059669 !important;
+  }
+
+  :deep(.ant-menu-item-selected::after) {
+    display: none;
+  }
+
+  :deep(.ant-menu-item:hover:not(.ant-menu-item-selected)) {
+    background-color: #f8fafc !important;
+    color: #059669 !important;
+  }
+
+  :deep(.ant-menu-item-group-title) {
+    padding-top: 16px;
+    padding-bottom: 8px;
+  }
+
+  .custom-menu-container {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .custom-menu-container::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-menu-container::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
   }
 </style>

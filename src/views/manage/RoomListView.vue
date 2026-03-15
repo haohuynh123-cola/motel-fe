@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { onMounted, computed } from 'vue'
+  import { onMounted, computed, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { message } from 'ant-design-vue'
-  import { SyncOutlined, ArrowLeftOutlined, FileTextOutlined } from '@ant-design/icons-vue'
+  import { SyncOutlined, ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons-vue'
   import { useRooms } from '@/composables/useRooms'
   import { formatCurrency } from '@/utils/format'
+  import AppTable from '@/components/AppTable.vue'
+  import RoomFormDrawer from '@/components/RoomFormDrawer.vue'
 
   const route = useRoute()
   const router = useRouter()
@@ -12,34 +14,20 @@
 
   const { loading, rooms, fetchRooms } = useRooms()
 
+  const drawerOpen = ref(false)
+  const currentRoom = ref<any>(null)
+
   const columns = [
-    {
-      title: 'Số phòng',
-      dataIndex: 'room_number',
-      key: 'room_number',
-    },
-    {
-      title: 'Tầng',
-      dataIndex: 'floor',
-      key: 'floor',
-    },
+    { title: 'Số phòng', dataIndex: 'room_number', key: 'room_number' },
+    { title: 'Tầng', dataIndex: 'floor', key: 'floor' },
     {
       title: 'Giá thuê',
       dataIndex: 'price',
       key: 'price',
       customRender: ({ text }: { text: number }) => formatCurrency(text),
     },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'is_available',
-      key: 'is_available',
-    },
-    {
-      title: 'Thao tác',
-      key: 'action',
-      width: 200,
-      align: 'center',
-    },
+    { title: 'Trạng thái', dataIndex: 'is_available', key: 'is_available' },
+    { title: 'Thao tác', key: 'action', width: 150, align: 'center' },
   ]
 
   const dataSource = computed(() =>
@@ -49,21 +37,14 @@
     }))
   )
 
-  const handleRefresh = async () => {
-    try {
-      await fetchRooms(houseId)
-    } catch (error) {
-      message.error('Lỗi tải danh sách phòng!')
-    }
+  const handleRefresh = () => fetchRooms(houseId)
+
+  const handleAdd = () => {
+    currentRoom.value = null
+    drawerOpen.value = true
   }
 
-  const goBack = () => {
-    router.push('/manage/houses')
-  }
-
-  const viewContracts = () => {
-    router.push(`/manage/houses/${houseId}/contracts`)
-  }
+  const goBack = () => router.push({ name: 'HouseList' })
 
   onMounted(handleRefresh)
 </script>
@@ -77,29 +58,23 @@
         </a-button>
         <h2 class="text-2xl font-bold m-0">Danh sách phòng</h2>
       </div>
-      <div class="flex gap-2">
-        <a-button @click="viewContracts" type="default" class="inline-flex items-center">
-          <template #icon><FileTextOutlined /></template>
-          <span>Xem hợp đồng nhà này</span>
+      <a-space>
+        <a-button type="primary" @click="handleAdd">
+          <template #icon><PlusOutlined /></template>
+          Thêm Phòng
         </a-button>
-        <a-button
-          type="primary"
-          @click="handleRefresh"
-          :loading="loading"
-          class="inline-flex items-center"
-        >
+        <a-button @click="handleRefresh" :loading="loading">
           <template #icon><SyncOutlined /></template>
-          <span>Làm mới</span>
+          Làm mới
         </a-button>
-      </div>
+      </a-space>
     </div>
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
-      <a-table
-        :dataSource="dataSource"
+      <AppTable
         :columns="columns"
+        :dataSource="dataSource"
         :loading="loading"
-        :pagination="{ pageSize: 10 }"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'is_available'">
@@ -111,7 +86,14 @@
             <a-button type="link">Chi tiết</a-button>
           </template>
         </template>
-      </a-table>
+      </AppTable>
     </a-card>
+
+    <RoomFormDrawer
+      v-model:open="drawerOpen"
+      :houseId="houseId"
+      :initialValues="currentRoom"
+      @success="handleRefresh"
+    />
   </div>
 </template>

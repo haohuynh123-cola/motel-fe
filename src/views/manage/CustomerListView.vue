@@ -8,47 +8,18 @@
     DeleteOutlined,
   } from '@ant-design/icons-vue'
   import { useCustomers } from '@/composables/useCustomers'
+  import AppTable from '@/components/AppTable.vue'
 
   const { loading, customers, page, limit, total, fetchCustomers } = useCustomers()
 
   const columns = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 80,
-    },
-    {
-      title: 'Họ và tên',
-      dataIndex: 'full_name',
-      key: 'full_name',
-    },
-    {
-      title: 'Số điện thoại',
-      dataIndex: 'phone',
-      key: 'phone',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'CCCD',
-      dataIndex: 'identity_number',
-      key: 'identity_number',
-    },
-    {
-      title: 'Địa chỉ',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Thao tác',
-      key: 'action',
-      width: 150,
-      align: 'center',
-    },
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
+    { title: 'Họ và tên', dataIndex: 'full_name', key: 'full_name' },
+    { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'CCCD', dataIndex: 'identity_number', key: 'identity_number' },
+    { title: 'Địa chỉ', dataIndex: 'address', key: 'address' },
+    { title: 'Thao tác', key: 'action', width: 150, align: 'center' },
   ]
 
   const dataSource = computed(() =>
@@ -92,7 +63,7 @@
     </div>
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
-      <a-table
+      <AppTable
         :dataSource="dataSource"
         :columns="columns"
         :loading="loading"
@@ -100,10 +71,6 @@
           current: page,
           pageSize: limit,
           total: total,
-          showSizeChanger: true,
-          pageSizeOptions: ['5', '10', '20', '50'],
-          showTotal: (totalCount: number) => `Tổng cộng ${totalCount} khách thuê`,
-
         }"
         @change="handleTableChange"
       >
@@ -119,7 +86,7 @@
             </div>
           </template>
         </template>
-      </a-table>
+      </AppTable>
     </a-card>
   </div>
 </template>
