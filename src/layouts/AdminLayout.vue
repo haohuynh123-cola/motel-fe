@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import { ref, watchEffect } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import Sidebar from '../components/Sidebar.vue'
   import authService from '../api/authService'
   import {
-    HomeOutlined,
     UserOutlined,
     LogoutOutlined,
     MenuUnfoldOutlined,
@@ -15,20 +14,7 @@
   } from '@ant-design/icons-vue'
 
   const router = useRouter()
-  const route = useRoute()
   const collapsed = ref(false)
-  const selectedKeys = ref(['houses'])
-
-  // Auto-update selected menu item based on current route
-  watchEffect(() => {
-    if (route.path.includes('/users')) {
-      selectedKeys.value = ['users']
-    } else if (route.path.includes('/houses')) {
-      selectedKeys.value = ['houses']
-    } else if (route.path.includes('/settings')) {
-      selectedKeys.value = ['settings']
-    }
-  })
 
   const handleLogout = () => {
     authService.logout()
@@ -38,77 +24,8 @@
 
 <template>
   <a-layout style="min-height: 100vh">
-    <!-- Sidebar -->
-    <a-layout-sider
-      v-model:collapsed="collapsed"
-      :trigger="null"
-      collapsible
-      theme="dark"
-      width="260px"
-      class="shadow-xl z-20"
-    >
-      <!-- Logo -->
-      <div
-        class="h-16 flex items-center justify-center m-4 rounded-xl bg-white/10 transition-all duration-300 overflow-hidden backdrop-blur-sm border border-white/5"
-      >
-        <div v-if="!collapsed" class="flex items-center gap-3 w-full px-4 justify-start">
-          <div
-            class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shrink-0 font-bold text-lg"
-          >
-            T
-          </div>
-          <span class="text-white text-lg font-bold tracking-wide truncate">Tro-Go</span>
-        </div>
-        <div
-          v-else
-          class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg font-bold text-lg"
-        >
-          T
-        </div>
-      </div>
-
-      <!-- Menu -->
-      <div class="px-3 mt-6">
-        <p
-          v-if="!collapsed"
-          class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-4 transition-all duration-300"
-        >
-          Menu Chính
-        </p>
-        <a-menu
-          v-model:selectedKeys="selectedKeys"
-          theme="dark"
-          mode="inline"
-          class="border-r-0 bg-transparent rounded-lg"
-          :style="{ padding: '0' }"
-        >
-          <a-menu-item key="houses" @click="router.push('/houses')" class="rounded-lg mb-1">
-            <template #icon>
-              <home-outlined class="text-lg" />
-            </template>
-            <span class="font-medium">Quản lý Nhà trọ</span>
-          </a-menu-item>
-          <a-menu-item key="users" class="rounded-lg mb-1">
-            <template #icon>
-              <user-outlined class="text-lg" />
-            </template>
-            <span class="font-medium">Quản lý Người dùng</span>
-          </a-menu-item>
-
-          <a-menu-divider
-            v-if="!collapsed"
-            class="my-4 border-gray-700 transition-all duration-300"
-          />
-
-          <a-menu-item key="settings" class="rounded-lg mb-1">
-            <template #icon>
-              <setting-outlined class="text-lg" />
-            </template>
-            <span class="font-medium">Cài đặt hệ thống</span>
-          </a-menu-item>
-        </a-menu>
-      </div>
-    </a-layout-sider>
+    <!-- Sidebar Component -->
+    <Sidebar :collapsed="collapsed" />
 
     <a-layout class="bg-gray-50 transition-all duration-300">
       <!-- Header -->
@@ -208,27 +125,4 @@
   </a-layout>
 </template>
 
-<style scoped>
-  /* Customizing Ant Design Menu styles to be more modern */
-  :deep(.ant-menu-dark.ant-menu-inline .ant-menu-item) {
-    width: calc(100% - 16px);
-    margin-inline: 8px;
-    border-radius: 8px;
-    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-  }
-
-  :deep(.ant-menu-dark.ant-menu-inline .ant-menu-item-selected) {
-    background-color: #1677ff !important;
-    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
-  }
-
-  :deep(.ant-menu-dark .ant-menu-item:hover:not(.ant-menu-item-selected)) {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  /* Sider customization */
-  :deep(.ant-layout-sider) {
-    background: #001529; /* Deep dark blue */
-    background: linear-gradient(180deg, #001529 0%, #000c17 100%);
-  }
-</style>
+<style scoped></style>
