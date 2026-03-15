@@ -40,44 +40,44 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'Dashboard',
-        component: () => import('../views/manage/DashboardView.vue'),
+        component: () => import('@/views/manage/DashboardView.vue'),
       },
       {
         path: 'houses',
         name: 'HouseList',
-        component: () => import('../views/manage/house/HouseListView.vue'),
+        component: () => import('@/views/manage/house/HouseListView.vue'),
       },
       {
         path: 'houses/:id/rooms',
         name: 'HouseRooms',
-        component: () => import('../views/manage/room/RoomListView.vue'),
+        component: () => import('@/views/manage/room/RoomListView.vue'),
         props: true,
       },
       {
         path: 'houses/:id/contracts',
         name: 'HouseContracts',
-        component: () => import('../views/manage/ContractListView.vue'),
+        component: () => import('@/views/manage/ContractListView.vue'),
         props: true,
       },
       {
         path: 'contracts',
         name: 'ContractList',
-        component: () => import('../views/manage/ContractListView.vue'),
+        component: () => import('@/views/manage/ContractListView.vue'),
       },
       {
         path: 'customers',
         name: 'CustomerList',
-        component: () => import('../views/manage/CustomerListView.vue'),
+        component: () => import('@/views/manage/CustomerListView.vue'),
       },
       {
         path: 'users',
         name: 'UserList',
-        component: () => import('../views/manage/UserListView.vue'),
+        component: () => import('@/views/manage/UserListView.vue'),
       },
       {
         path: 'settings',
         name: 'Settings',
-        component: () => import('../views/manage/HouseListView.vue'), // Placeholder
+        component: () => import('@/views/manage/house/HouseListView.vue'), // Placeholder
       },
     ],
   },
