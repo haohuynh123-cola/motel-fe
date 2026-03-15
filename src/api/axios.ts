@@ -8,7 +8,7 @@ const apiClient = axios.create({
   timeout: 10000, // Timeout sau 10s
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
 })
 
