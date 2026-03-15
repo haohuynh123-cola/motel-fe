@@ -5,8 +5,8 @@
   import { useRouter } from 'vue-router'
   import { useHouses } from '@/composables/useHouses'
   import { formatDate } from '@/utils/format'
-  import AppTable from '@/components/AppTable.vue'
-  import HouseFormDrawer from '@/components/HouseFormDrawer.vue'
+  import AppTable from '@/components/shared/AppTable.vue'
+  import HouseFormDrawer from './components/HouseFormDrawer.vue'
 
   const router = useRouter()
   const { houses, loading, fetchHouses, deleteHouse } = useHouses()

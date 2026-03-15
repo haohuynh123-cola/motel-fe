@@ -5,8 +5,8 @@
   import { SyncOutlined, ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons-vue'
   import { useRooms } from '@/composables/useRooms'
   import { formatCurrency } from '@/utils/format'
-  import AppTable from '@/components/AppTable.vue'
-  import RoomFormDrawer from '@/components/RoomFormDrawer.vue'
+  import AppTable from '@/components/shared/AppTable.vue'
+  import RoomFormDrawer from './components/RoomFormDrawer.vue'
 
   const route = useRoute()
   const router = useRouter()

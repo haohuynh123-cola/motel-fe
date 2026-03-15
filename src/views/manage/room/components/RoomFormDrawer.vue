@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, ref, watch } from 'vue'
   import { message } from 'ant-design-vue'
-  import roomService from '@/api/roomService'
+  import roomService, { type Room } from '@/api/roomService'
 
   interface Props {
     open: boolean
@@ -43,10 +43,14 @@
   const onFinish = async () => {
     try {
       loading.value = true
-      const payload = { ...formState, house_id: props.houseId }
-      
+      // Chuyển đổi house_id sang đúng định dạng của Room interface (thường là number)
+      const payload: Partial<Room> = {
+        ...formState,
+        house_id: typeof props.houseId === 'string' ? parseInt(props.houseId) : props.houseId,
+      }
+
       if (props.initialValues?.id) {
-        // Logic update room (nếu service có hỗ trợ)
+        // Logic update room
         message.info('Tính năng cập nhật phòng đang phát triển')
       } else {
         await roomService.createRoom(payload)
@@ -90,8 +94,8 @@
         <a-input-number
           v-model:value="formState.price"
           :min="0"
-          :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-          :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+          :formatter="(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+          :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
           style="width: 100%"
         />
       </a-form-item>

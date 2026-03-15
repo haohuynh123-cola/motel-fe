@@ -45,12 +45,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'houses',
         name: 'HouseList',
-        component: () => import('../views/manage/HouseListView.vue'),
+        component: () => import('../views/manage/house/HouseListView.vue'),
       },
       {
         path: 'houses/:id/rooms',
         name: 'HouseRooms',
-        component: () => import('../views/manage/RoomListView.vue'),
+        component: () => import('../views/manage/room/RoomListView.vue'),
         props: true,
       },
       {
