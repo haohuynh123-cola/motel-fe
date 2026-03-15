@@ -1,7 +1,13 @@
 <script setup lang="ts">
   import { onMounted, computed, ref } from 'vue'
   import { message } from 'ant-design-vue'
-  import { SyncOutlined, EditOutlined, DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons-vue'
+  import {
+    SyncOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    PlusOutlined,
+    EyeOutlined,
+  } from '@ant-design/icons-vue'
   import { useRouter } from 'vue-router'
   import { useHouses } from '@/composables/useHouses'
   import { formatDate } from '@/utils/format'
@@ -18,11 +24,11 @@
     { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
     { title: 'Tên Nhà Trọ', dataIndex: 'name', key: 'name' },
     { title: 'Địa chỉ', dataIndex: 'address', key: 'address' },
-    { 
-      title: 'Ngày đăng ký', 
-      dataIndex: 'created_at', 
+    {
+      title: 'Ngày đăng ký',
+      dataIndex: 'created_at',
       key: 'created_at',
-      customRender: ({ text }: { text: string }) => formatDate(text) 
+      customRender: ({ text }: { text: string }) => formatDate(text),
     },
     { title: 'Thao tác', key: 'action', width: 200, align: 'center' },
   ]
@@ -77,11 +83,7 @@
     </div>
 
     <a-card :bordered="false" class="shadow-sm rounded-lg">
-      <AppTable
-        :columns="columns"
-        :dataSource="dataSource"
-        :loading="loading"
-      >
+      <AppTable :columns="columns" :dataSource="dataSource" :loading="loading">
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
             <a class="font-semibold" @click="handleViewRooms(record)">{{ record.name }}</a>
