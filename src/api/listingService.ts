@@ -12,6 +12,8 @@ export interface MarketListing {
   url: string
   image_url: string
   images: string[]
+  latitude: number
+  longitude: number
   posted_at: string
   created_at: string
 }

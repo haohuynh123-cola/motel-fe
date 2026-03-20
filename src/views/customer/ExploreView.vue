@@ -1,18 +1,21 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue'
+  import { onMounted, ref } from 'vue'
   import {
     SearchOutlined,
     EnvironmentOutlined,
     DollarOutlined,
     FireOutlined,
     ReloadOutlined,
+    AppstoreOutlined,
+    CompassOutlined,
   } from '@ant-design/icons-vue'
   import { useListings } from '@/composables/useListings'
   import ListingCard from './components/ListingCard.vue'
+  import ListingMapView from './components/ListingMapView.vue'
 
   const { listings, total, loading, error, hasMore, fetchListings, loadMore } = useListings()
 
-  const searchQuery = ''
+  const viewMode = ref<'grid' | 'map'>('grid')
 
   onMounted(() => fetchListings(true))
 </script>
@@ -96,20 +99,49 @@
         </button>
       </div>
 
-      <!-- Header đếm kết quả -->
+      <!-- Header đếm kết quả + Toggle view -->
       <div class="flex items-center justify-between mb-6">
         <p class="text-gray-500 text-sm font-medium">
           Tìm thấy
           <span class="text-blue-600 font-black text-base">{{ total.toLocaleString('vi-VN') }}</span>
           tin đăng phòng trọ
         </p>
-        <button
-          @click="fetchListings(true)"
-          class="flex items-center gap-2 text-gray-400 hover:text-blue-600 text-sm font-bold transition-colors"
-        >
-          <ReloadOutlined :class="{ 'animate-spin': loading }" />
-          Làm mới
-        </button>
+        <div class="flex items-center gap-3">
+          <!-- Grid / Map toggle -->
+          <div class="flex items-center bg-gray-100 rounded-xl p-1">
+            <button
+              :class="[
+                'flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all',
+                viewMode === 'grid'
+                  ? 'bg-white text-blue-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700',
+              ]"
+              @click="viewMode = 'grid'"
+            >
+              <AppstoreOutlined />
+              <span>Lưới</span>
+            </button>
+            <button
+              :class="[
+                'flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all',
+                viewMode === 'map'
+                  ? 'bg-white text-blue-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700',
+              ]"
+              @click="viewMode = 'map'"
+            >
+              <CompassOutlined />
+              <span>Bản đồ</span>
+            </button>
+          </div>
+          <button
+            @click="fetchListings(true)"
+            class="flex items-center gap-2 text-gray-400 hover:text-blue-600 text-sm font-bold transition-colors"
+          >
+            <ReloadOutlined :class="{ 'animate-spin': loading }" />
+            Làm mới
+          </button>
+        </div>
       </div>
 
       <!-- Skeleton loading -->
@@ -129,6 +161,14 @@
             <div class="h-3 bg-gray-100 rounded w-full"></div>
           </div>
         </div>
+      </div>
+
+      <!-- Map View -->
+      <div v-else-if="listings.length > 0 && viewMode === 'map'">
+        <ListingMapView :listings="listings" />
+        <p class="text-center text-gray-400 text-xs mt-3">
+          Hiển thị {{ listings.length }} pin trên bản đồ · chỉ những tin có toạ độ mới có pin
+        </p>
       </div>
 
       <!-- Listings Grid -->
@@ -163,8 +203,8 @@
         </a-button>
       </div>
 
-      <!-- Load More -->
-      <div v-if="!loading && hasMore" class="flex justify-center mt-10">
+      <!-- Load More — chỉ hiển thị ở chế độ lưới -->
+      <div v-if="!loading && hasMore && viewMode === 'grid'" class="flex justify-center mt-10">
         <a-button
           size="large"
           @click="loadMore"

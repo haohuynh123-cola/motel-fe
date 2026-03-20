@@ -11,6 +11,7 @@ import {
   PictureOutlined,
 } from '@ant-design/icons-vue'
 import listingService, { type MarketListing } from '@/api/listingService'
+import SingleListingMap from './components/SingleListingMap.vue'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
@@ -160,6 +161,18 @@ const descriptionLines = computed(() =>
               <p v-for="(line, i) in descriptionLines" :key="i">{{ line }}</p>
             </div>
           </div>
+        </div>
+
+        <!-- Map vị trí -->
+        <div
+          v-if="listing.latitude && listing.longitude"
+          class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+        >
+          <SingleListingMap
+            :latitude="listing.latitude"
+            :longitude="listing.longitude"
+            :title="listing.title"
+          />
         </div>
       </div>
 
