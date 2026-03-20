@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons-vue'
 import type { MarketListing } from '@/api/listingService'
 
-const props = defineProps<{ listing: MarketListing }>()
+const props = defineProps<{ listing: MarketListing }
 const router = useRouter()
 
 const formattedPrice = computed(() =>
