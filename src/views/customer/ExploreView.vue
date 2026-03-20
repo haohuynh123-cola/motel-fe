@@ -1,47 +1,26 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { onMounted } from 'vue'
   import {
     SearchOutlined,
     EnvironmentOutlined,
     DollarOutlined,
-    ThunderboltOutlined,
-    CheckCircleFilled,
     FireOutlined,
+    ReloadOutlined,
   } from '@ant-design/icons-vue'
-  import houseService, { type House } from '@/api/houseService'
+  import { useListings } from '@/composables/useListings'
+  import ListingCard from './components/ListingCard.vue'
 
-  const houses = ref<House[]>([])
-  const loading = ref(false)
-  const searchQuery = ref('')
+  const { listings, total, loading, error, hasMore, fetchListings, loadMore } = useListings()
 
-  const fetchHouses = async () => {
-    try {
-      loading.value = true
-      const response = (await houseService.getHouses({ limit: 20 })) as any
-      if (response.status) {
-        houses.value = response.data || []
-      }
-    } catch (error) {
-      console.error('Error fetching houses:', error)
-    } finally {
-      loading.value = false
-    }
-  }
+  const searchQuery = ''
 
-  const formatPrice = (value: number) => {
-    return new Intl.NumberFormat('vi-VN').format(value || 2000000)
-  }
-
-  onMounted(() => {
-    fetchHouses()
-  })
+  onMounted(() => fetchListings(true))
 </script>
 
 <template>
   <div class="bg-white min-h-screen pb-20">
-    <!-- Hero Section tinh gọn hơn -->
+    <!-- Hero Section -->
     <div class="relative bg-blue-600 pt-20 pb-40 px-4 overflow-hidden">
-      <!-- Background trang trí -->
       <div
         class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-500 rounded-full opacity-20 blur-3xl"
       ></div>
@@ -54,19 +33,17 @@
           Tìm trọ ưng ý, <br class="hidden sm:block" />thuê phòng cực dễ.
         </h1>
         <p class="text-blue-100 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-medium opacity-90">
-          Hệ thống nhà trọ minh bạch, tiện nghi và được xác thực 100%.
+          Tổng hợp tin đăng phòng trọ mới nhất từ Chợ Tốt, cập nhật mỗi giờ.
         </p>
 
-        <!-- Search Bar chuyên nghiệp -->
         <div
           class="max-w-4xl mx-auto bg-white p-2.5 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-2 border-4 border-blue-500/20"
         >
           <div class="flex-1 flex items-center px-5 py-2">
             <SearchOutlined class="text-blue-500 text-xl mr-4" />
             <input
-              v-model="searchQuery"
               type="text"
-              placeholder="Bạn muốn tìm nhà trọ ở đâu?"
+              placeholder="Bạn muốn tìm phòng trọ ở đâu?"
               class="w-full h-10 outline-none text-gray-700 font-bold placeholder:text-gray-300 placeholder:font-medium"
             />
           </div>
@@ -76,10 +53,10 @@
             <select
               class="w-full h-10 outline-none text-gray-700 font-bold bg-transparent appearance-none"
             >
-              <option>Toàn thành phố</option>
-              <option>Quận 1</option>
-              <option>Quận Bình Thạnh</option>
-              <option>Quận 7</option>
+              <option>Toàn quốc</option>
+              <option>TP. Hồ Chí Minh</option>
+              <option>Hà Nội</option>
+              <option>Đà Nẵng</option>
             </select>
           </div>
           <a-button
@@ -92,116 +69,114 @@
       </div>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-6 -mt-20 relative z-20">
-      <!-- Quick Filters with Pills style -->
-      <div class="flex flex-wrap items-center gap-3 mb-12 overflow-x-auto pb-4 no-scrollbar">
-        <span class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em] mr-2"
-          >Lọc nhanh:</span
-        >
+      <!-- Quick Filters -->
+      <div class="flex flex-wrap items-center gap-3 mb-8 overflow-x-auto pb-4 no-scrollbar">
+        <span class="text-gray-400 font-bold text-[10px] uppercase tracking-[0.2em] mr-2">Lọc nhanh:</span>
         <button
           class="bg-white hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-5 py-2.5 rounded-full font-bold text-sm shadow-sm border border-gray-100 transition-all flex items-center gap-2"
         >
-          <FireOutlined class="text-orange-500" /> Hot nhất
+          <FireOutlined class="text-orange-500" /> Mới nhất
         </button>
         <button
           class="bg-white hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-5 py-2.5 rounded-full font-bold text-sm shadow-sm border border-gray-100 transition-all flex items-center gap-2"
         >
-          <DollarOutlined class="text-green-500" /> Giá rẻ
+          <DollarOutlined class="text-green-500" /> Dưới 3 triệu
         </button>
         <button
           class="bg-white hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-5 py-2.5 rounded-full font-bold text-sm shadow-sm border border-gray-100 transition-all"
         >
-          Gần trung tâm
+          Có nội thất
         </button>
         <button
           class="bg-white hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-5 py-2.5 rounded-full font-bold text-sm shadow-sm border border-gray-100 transition-all"
         >
-          Phòng mới
+          Gần trường học
         </button>
       </div>
 
-      <!-- House Grid -->
+      <!-- Header đếm kết quả -->
+      <div class="flex items-center justify-between mb-6">
+        <p class="text-gray-500 text-sm font-medium">
+          Tìm thấy
+          <span class="text-blue-600 font-black text-base">{{ total.toLocaleString('vi-VN') }}</span>
+          tin đăng phòng trọ
+        </p>
+        <button
+          @click="fetchListings(true)"
+          class="flex items-center gap-2 text-gray-400 hover:text-blue-600 text-sm font-bold transition-colors"
+        >
+          <ReloadOutlined :class="{ 'animate-spin': loading }" />
+          Làm mới
+        </button>
+      </div>
+
+      <!-- Skeleton loading -->
       <div
-        v-if="loading"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+        v-if="loading && listings.length === 0"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
       >
-        <div v-for="i in 8" :key="i" class="animate-pulse bg-gray-50 h-[400px] rounded-3xl"></div>
-      </div>
-
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
         <div
-          v-for="house in houses"
-          :key="house.id"
-          class="group bg-white rounded-[40px] overflow-hidden border border-gray-50 shadow-sm hover:shadow-[0_20px_50px_rgba(8,112,184,0.1)] transition-all duration-500 hover:-translate-y-2"
+          v-for="i in 8"
+          :key="i"
+          class="animate-pulse bg-gray-50 rounded-2xl overflow-hidden"
         >
-          <!-- Thumbnail -->
-          <div class="relative h-64 overflow-hidden">
-            <img
-              :src="`https://picsum.photos/seed/${house.id}/800/600`"
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-            />
-
-            <div class="absolute top-5 left-5 flex flex-col gap-2">
-              <span
-                class="bg-blue-600 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-lg"
-                >Mới đăng</span
-              >
-            </div>
-
-            <div
-              class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-            >
-              <div class="flex items-center gap-2 text-white">
-                <CheckCircleFilled class="text-blue-400 text-base" />
-                <span class="text-xs font-bold tracking-wide">Xác thực bởi Tro-Go</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Content -->
-          <div class="p-8">
-            <h3
-              class="text-xl font-black text-gray-800 mb-3 truncate group-hover:text-blue-600 transition-colors"
-            >
-              {{ house.name }}
-            </h3>
-            <p
-              class="text-gray-400 text-sm flex items-start gap-2 mb-6 h-10 line-clamp-2 leading-relaxed"
-            >
-              <EnvironmentOutlined class="mt-1 text-blue-500 flex-shrink-0" />
-              {{ house.address }}
-            </p>
-
-            <div class="flex items-end justify-between border-t border-gray-50 pt-6">
-              <div>
-                <p class="text-gray-300 text-[9px] font-black uppercase tracking-[0.2em] mb-1">
-                  Giá thuê từ
-                </p>
-                <div class="flex items-baseline gap-1">
-                  <span class="text-2xl font-black text-gray-800">{{ formatPrice(3500000) }}</span>
-                  <span class="text-gray-400 text-xs font-bold">/tháng</span>
-                </div>
-              </div>
-              <button
-                class="bg-gray-900 text-white p-4 rounded-2xl hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-200"
-              >
-                <ThunderboltOutlined class="text-lg" />
-              </button>
-            </div>
+          <div class="h-52 bg-gray-200"></div>
+          <div class="p-4 space-y-3">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-3 bg-gray-100 rounded w-full"></div>
           </div>
         </div>
       </div>
 
+      <!-- Listings Grid -->
+      <div
+        v-else-if="listings.length > 0"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+      >
+        <ListingCard
+          v-for="listing in listings"
+          :key="listing.id"
+          :listing="listing"
+        />
+      </div>
+
+      <!-- Error State -->
+      <div
+        v-else-if="error"
+        class="flex flex-col items-center justify-center py-24 bg-red-50 rounded-2xl border border-dashed border-red-200"
+      >
+        <p class="text-red-500 font-bold mb-4">{{ error }}</p>
+        <a-button type="primary" danger @click="fetchListings(true)">Thử lại</a-button>
+      </div>
+
       <!-- Empty State -->
       <div
-        v-if="!loading && houses.length === 0"
-        class="flex flex-col items-center justify-center py-32 bg-gray-50 rounded-[50px] border-2 border-dashed border-gray-200"
+        v-else
+        class="flex flex-col items-center justify-center py-32 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200"
       >
-        <a-empty description="Hiện tại khu vực này chưa có nhà trọ nào." />
-        <a-button type="link" @click="fetchHouses" class="mt-4 font-bold"
-          >Thử tải lại dữ liệu</a-button
+        <a-empty description="Chưa có tin đăng nào. Crawler đang thu thập dữ liệu..." />
+        <a-button type="link" @click="fetchListings(true)" class="mt-4 font-bold">
+          Tải lại
+        </a-button>
+      </div>
+
+      <!-- Load More -->
+      <div v-if="!loading && hasMore" class="flex justify-center mt-10">
+        <a-button
+          size="large"
+          @click="loadMore"
+          class="rounded-full px-10 font-bold border-blue-200 text-blue-600 hover:border-blue-500"
         >
+          Xem thêm {{ total - listings.length }} tin
+        </a-button>
+      </div>
+
+      <!-- Loading more indicator -->
+      <div v-if="loading && listings.length > 0" class="flex justify-center mt-10">
+        <a-spin size="large" />
       </div>
     </div>
   </div>
