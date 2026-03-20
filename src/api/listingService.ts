@@ -24,6 +24,11 @@ export interface ListingResponse {
   }
 }
 
+export interface ListingDetailResponse {
+  status: boolean
+  data: MarketListing
+}
+
 export default {
   async getListings(params: {
     source?: string
@@ -36,6 +41,13 @@ export default {
         page: params.page ?? 1,
         limit: params.limit ?? 20,
       },
+    })
+    return response.data
+  },
+
+  async getListingById(id: string, source = 'chotot'): Promise<ListingDetailResponse> {
+    const response = await apiClient.get<ListingDetailResponse>(`/market-listings/${id}`, {
+      params: { source },
     })
     return response.data
   },

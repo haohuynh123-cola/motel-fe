@@ -20,6 +20,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Explore',
         component: () => import('../views/customer/ExploreView.vue'),
       },
+      {
+        path: 'listings/:id',
+        name: 'ListingDetail',
+        component: () => import('../views/customer/ListingDetailView.vue'),
+        props: true,
+      },
     ],
   },
 
