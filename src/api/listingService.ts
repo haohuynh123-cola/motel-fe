@@ -31,6 +31,22 @@ export interface ListingDetailResponse {
   data: MarketListing
 }
 
+export interface ListingStats {
+  total: number
+  avg_price: number
+  min_price: number
+  max_price: number
+  avg_area: number
+  price_ranges: { label: string; count: number }[]
+  area_ranges: { label: string; count: number }[]
+  recent_count: number
+}
+
+export interface ListingStatsResponse {
+  status: boolean
+  data: ListingStats
+}
+
 export default {
   async getListings(params: {
     source?: string
@@ -49,6 +65,13 @@ export default {
 
   async getListingById(id: string, source = 'chotot'): Promise<ListingDetailResponse> {
     const response = await apiClient.get<ListingDetailResponse>(`/market-listings/${id}`, {
+      params: { source },
+    })
+    return response.data
+  },
+
+  async getStats(source = 'chotot'): Promise<ListingStatsResponse> {
+    const response = await apiClient.get<ListingStatsResponse>('/market-listings/stats', {
       params: { source },
     })
     return response.data

@@ -95,6 +95,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'SupportChat',
         component: () => import('@/views/manage/SupportChatView.vue'),
       },
+      {
+        path: 'listings/stats',
+        name: 'ListingStats',
+        component: () => import('@/views/manage/ListingStatsView.vue'),
+      },
     ],
   },
 ]

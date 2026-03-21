@@ -9,6 +9,7 @@
     SettingOutlined,
     TeamOutlined,
     MessageOutlined,
+    BarChartOutlined,
   } from '@ant-design/icons-vue'
 
   const props = defineProps({
@@ -108,6 +109,18 @@
           <a-menu-item key="UserList" class="rounded-lg mb-1">
             <template #icon><UserOutlined class="text-lg" /></template>
             <span class="font-medium text-slate-600">Người dùng</span>
+          </a-menu-item>
+        </a-menu-item-group>
+
+        <a-menu-item-group key="g3">
+          <template #title v-if="!props.collapsed">
+            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest pl-4">
+              Thị trường
+            </span>
+          </template>
+          <a-menu-item key="ListingStats" class="rounded-lg mb-1">
+            <template #icon><BarChartOutlined class="text-lg" /></template>
+            <span class="font-medium text-slate-600">Thống kê trọ</span>
           </a-menu-item>
         </a-menu-item-group>
 
