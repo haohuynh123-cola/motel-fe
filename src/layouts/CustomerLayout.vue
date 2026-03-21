@@ -1,10 +1,14 @@
-<script setup>
+<script setup lang="ts">
   import { useRouter } from 'vue-router'
-  import { HomeOutlined, LoginOutlined } from '@ant-design/icons-vue'
+  import { HomeOutlined, LoginOutlined, HeartOutlined } from '@ant-design/icons-vue'
+  import { useWishlist } from '@/composables/useWishlist'
+  import SupportChatWidget from '@/components/shared/SupportChatWidget.vue'
 
   const router = useRouter()
   const goToLogin = () => router.push('/login')
   const goToHome = () => router.push('/explore')
+
+  const { wishlist } = useWishlist()
 </script>
 
 <template>
@@ -35,6 +39,14 @@
           class="font-bold text-gray-500 hover:text-blue-600 hidden md:block uppercase text-xs tracking-widest"
           >Về chúng tôi</a-button
         >
+        <a-badge :count="wishlist.length" :offset="[0, 0]" color="red">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all"
+            @click="router.push('/wishlist')"
+          >
+            <HeartOutlined class="text-xl" />
+          </div>
+        </a-badge>
         <a-button
           @click="goToLogin"
           type="primary"
@@ -49,6 +61,9 @@
     <a-layout-content>
       <router-view />
     </a-layout-content>
+
+    <!-- Support Chat Widget -->
+    <SupportChatWidget />
 
     <!-- Footer hiện đại -->
     <a-layout-footer class="bg-gray-50 border-t border-gray-100 pt-20 pb-10">

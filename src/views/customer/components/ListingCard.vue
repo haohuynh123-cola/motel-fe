@@ -6,10 +6,13 @@ import {
   ExpandOutlined,
   ClockCircleOutlined,
   RightOutlined,
+  HeartOutlined,
+  HeartFilled,
 } from '@ant-design/icons-vue'
 import type { MarketListing } from '@/api/listingService'
+import { useWishlist } from '@/composables/useWishlist'
 
-const props = defineProps<{ listing: MarketListing }
+const props = defineProps<{ listing: MarketListing }>()
 const router = useRouter()
 
 const formattedPrice = computed(() =>
@@ -35,6 +38,8 @@ const shortAddress = computed(() => {
 })
 
 const goToDetail = () => router.push({ name: 'ListingDetail', params: { id: props.listing.id } })
+
+const { isWishlisted, toggleWishlist } = useWishlist()
 </script>
 
 <template>
@@ -53,6 +58,15 @@ const goToDetail = () => router.push({ name: 'ListingDetail', params: { id: prop
       <div v-else class="w-full h-full flex items-center justify-center bg-gray-100">
         <ExpandOutlined class="text-4xl text-gray-300" />
       </div>
+
+      <!-- Heart / wishlist button -->
+      <button
+        @click.stop="toggleWishlist(listing.id)"
+        class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-md flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+      >
+        <HeartFilled v-if="isWishlisted(listing.id)" class="text-red-500 text-base" />
+        <HeartOutlined v-else class="text-gray-400 text-base" />
+      </button>
 
       <div class="absolute top-3 left-3 flex gap-2">
         <span class="bg-orange-500 text-white text-[10px] font-black uppercase tracking-wide px-2.5 py-1 rounded-lg">Chợ Tốt</span>

@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/customer/ListingDetailView.vue'),
         props: true,
       },
+      {
+        path: 'wishlist',
+        name: 'Wishlist',
+        component: () => import('../views/customer/WishlistView.vue'),
+      },
     ],
   },
 
@@ -84,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'settings',
         name: 'Settings',
         component: () => import('@/views/manage/house/HouseListView.vue'), // Placeholder
+      },
+      {
+        path: 'support',
+        name: 'SupportChat',
+        component: () => import('@/views/manage/SupportChatView.vue'),
       },
     ],
   },

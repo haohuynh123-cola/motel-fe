@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, computed } from 'vue'
   import {
     SearchOutlined,
-    EnvironmentOutlined,
     DollarOutlined,
     FireOutlined,
     ReloadOutlined,
@@ -12,10 +11,19 @@
   import { useListings } from '@/composables/useListings'
   import ListingCard from './components/ListingCard.vue'
   import ListingMapView from './components/ListingMapView.vue'
+  import LocationPicker, { type LocationValue } from '@/components/shared/LocationPicker.vue'
 
   const { listings, total, loading, error, hasMore, fetchListings, loadMore } = useListings()
 
   const viewMode = ref<'grid' | 'map'>('grid')
+  const selectedLocation = ref<LocationValue>({})
+
+  const filteredListings = computed(() => {
+    if (!selectedLocation.value?.province) return listings.value
+    return listings.value.filter((l) =>
+      l.address?.toLowerCase().includes(selectedLocation.value.province!.name.toLowerCase()),
+    )
+  })
 
   onMounted(() => fetchListings(true))
 </script>
@@ -52,15 +60,7 @@
           </div>
           <div class="w-px h-8 bg-gray-100 hidden md:block self-center"></div>
           <div class="flex-1 flex items-center px-5 py-2 hidden sm:flex">
-            <EnvironmentOutlined class="text-blue-500 text-xl mr-4" />
-            <select
-              class="w-full h-10 outline-none text-gray-700 font-bold bg-transparent appearance-none"
-            >
-              <option>Toàn quốc</option>
-              <option>TP. Hồ Chí Minh</option>
-              <option>Hà Nội</option>
-              <option>Đà Nẵng</option>
-            </select>
+            <LocationPicker v-model="selectedLocation" />
           </div>
           <a-button
             type="primary"
@@ -103,8 +103,9 @@
       <div class="flex items-center justify-between mb-6">
         <p class="text-gray-500 text-sm font-medium">
           Tìm thấy
-          <span class="text-blue-600 font-black text-base">{{ total.toLocaleString('vi-VN') }}</span>
+          <span class="text-blue-600 font-black text-base">{{ (selectedLocation.province ? filteredListings.length : total).toLocaleString('vi-VN') }}</span>
           tin đăng phòng trọ
+          <span v-if="selectedLocation.province" class="text-gray-400 text-xs ml-1">(đang lọc)</span>
         </p>
         <div class="flex items-center gap-3">
           <!-- Grid / Map toggle -->
@@ -164,20 +165,20 @@
       </div>
 
       <!-- Map View -->
-      <div v-else-if="listings.length > 0 && viewMode === 'map'">
-        <ListingMapView :listings="listings" />
+      <div v-else-if="filteredListings.length > 0 && viewMode === 'map'">
+        <ListingMapView :listings="filteredListings" />
         <p class="text-center text-gray-400 text-xs mt-3">
-          Hiển thị {{ listings.length }} pin trên bản đồ · chỉ những tin có toạ độ mới có pin
+          Hiển thị {{ filteredListings.length }} pin trên bản đồ · chỉ những tin có toạ độ mới có pin
         </p>
       </div>
 
       <!-- Listings Grid -->
       <div
-        v-else-if="listings.length > 0"
+        v-else-if="filteredListings.length > 0"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
       >
         <ListingCard
-          v-for="listing in listings"
+          v-for="listing in filteredListings"
           :key="listing.id"
           :listing="listing"
         />
@@ -204,7 +205,7 @@
       </div>
 
       <!-- Load More — chỉ hiển thị ở chế độ lưới -->
-      <div v-if="!loading && hasMore && viewMode === 'grid'" class="flex justify-center mt-10">
+      <div v-if="!loading && hasMore && viewMode === 'grid' && !selectedLocation.province" class="flex justify-center mt-10">
         <a-button
           size="large"
           @click="loadMore"

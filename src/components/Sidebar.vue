@@ -8,6 +8,7 @@
     FileProtectOutlined,
     SettingOutlined,
     TeamOutlined,
+    MessageOutlined,
   } from '@ant-design/icons-vue'
 
   const props = defineProps({
@@ -114,6 +115,11 @@
         <a-menu-item key="Settings" class="rounded-lg">
           <template #icon><SettingOutlined class="text-lg" /></template>
           <span class="font-medium text-slate-600">Hệ thống</span>
+        </a-menu-item>
+
+        <a-menu-item key="SupportChat" class="rounded-lg mb-1">
+          <template #icon><MessageOutlined class="text-lg" /></template>
+          <span class="font-medium text-slate-600">Hỗ trợ</span>
         </a-menu-item>
       </a-menu>
     </div>
