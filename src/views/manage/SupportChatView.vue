@@ -9,9 +9,9 @@ import {
 import supportService, { type GuestSession, type SupportMessage } from '@/api/supportService'
 
 const wsBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1').replace(
-  /^http/,
-  'ws',
-)
+  /^https/,
+  'wss',
+).replace(/^http/, 'ws')
 
 const sessions = ref<GuestSession[]>([])
 const selectedSession = ref<GuestSession | null>(null)
