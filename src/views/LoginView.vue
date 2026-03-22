@@ -2,6 +2,7 @@
   import { reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import authService from '../api/authService'
+  import { useAuthStore } from '@/stores/auth'
   import {
     UserOutlined,
     LockOutlined,
@@ -13,6 +14,7 @@
   import { message } from 'ant-design-vue'
 
   const router = useRouter()
+  const authStore = useAuthStore()
   const loading = ref(false)
   const mode = ref<'login' | 'register' | 'otp'>('login')
 
@@ -29,7 +31,10 @@
       loading.value = true
       const res = await authService.login(formState.username, formState.password)
       console.log('Login response:', res)
-      if (res.status) {
+      if (res.status && res.data) {
+        if (res.data.token) authStore.setToken(res.data.token)
+        if (res.data.user) authStore.setUser(res.data.user)
+        
         message.success('Đăng nhập thành công!')
         router.push('/manage')
       } else {
@@ -73,7 +78,10 @@
       loading.value = true
       const res = await authService.verifyOtp(formState.email, formState.otp)
       console.log('Verify OTP response:', res)
-      if (res.status) {
+      if (res.status && res.data) {
+        if (res.data.token) authStore.setToken(res.data.token)
+        if (res.data.user) authStore.setUser(res.data.user)
+
         message.success('Xác thực thành công!')
         router.push('/manage')
       } else {

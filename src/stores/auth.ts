@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import authService from '@/api/authService'
 
 export interface UserInfo {
+  id: number
   username: string
   email?: string
   role?: string

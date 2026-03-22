@@ -9,13 +9,27 @@ export interface MarketListing {
   area: number
   address: string
   contact_phone: string
-  url: string
+  url?: string
   image_url: string
   images: string[]
   latitude: number
   longitude: number
   posted_at: string
   created_at: string
+  user_id?: number // ID của người dùng đăng tin (nếu là tin cộng đồng)
+}
+
+export interface CreateListingRequest {
+  title: string
+  description: string
+  price: number
+  area: number
+  address: string
+  contact_phone: string
+  image_url: string
+  images?: string[]
+  latitude?: number
+  longitude?: number
 }
 
 export interface ListingResponse {
@@ -67,6 +81,11 @@ export default {
     const response = await apiClient.get<ListingDetailResponse>(`/market-listings/${id}`, {
       params: { source },
     })
+    return response.data
+  },
+
+  async createListing(data: CreateListingRequest): Promise<ListingDetailResponse> {
+    const response = await apiClient.post<ListingDetailResponse>('/market-listings', data)
     return response.data
   },
 

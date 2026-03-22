@@ -9,12 +9,15 @@ import {
   ClockCircleOutlined,
   LinkOutlined,
   PictureOutlined,
+  MessageOutlined,
 } from '@ant-design/icons-vue'
 import listingService, { type MarketListing } from '@/api/listingService'
 import SingleListingMap from './components/SingleListingMap.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
+const authStore = useAuthStore()
 
 const listing = ref<MarketListing | null>(null)
 const loading = ref(false)
@@ -32,6 +35,20 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const startChat = () => {
+  if (!authStore.user) {
+    router.push('/login')
+    return
+  }
+  if (listing.value?.user_id) {
+    // Chuyển hướng đến trang chat và truyền ID người nhận qua query
+    router.push({
+      path: '/manage/chat',
+      query: { userId: listing.value.user_id }
+    })
+  }
+}
 
 const allImages = computed(() => {
   if (!listing.value) return []
@@ -193,21 +210,33 @@ const descriptionLines = computed(() =>
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <p class="text-xs text-gray-400 uppercase tracking-widest font-bold mb-4">Liên hệ</p>
 
-          <div v-if="listing.contact_phone" class="mb-4">
+          <div class="flex flex-col gap-3">
             <a
+              v-if="listing.contact_phone"
               :href="`tel:${listing.contact_phone}`"
               class="flex items-center justify-center gap-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3.5 rounded-xl transition-colors"
             >
               <PhoneOutlined />
               {{ listing.contact_phone }}
             </a>
+
+            <!-- Nút nhắn tin (chỉ hiện cho tin đăng cộng đồng có user_id) -->
+            <button
+              v-if="listing.user_id && listing.user_id !== authStore.user?.id"
+              @click="startChat"
+              class="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-black py-3.5 rounded-xl transition-colors"
+            >
+              <MessageOutlined />
+              Nhắn tin cho chủ nhà
+            </button>
           </div>
 
           <a
+            v-if="listing.url"
             :href="listing.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center justify-center gap-2 w-full border-2 border-orange-400 text-orange-500 hover:bg-orange-50 font-bold py-3 rounded-xl transition-colors text-sm"
+            class="mt-4 flex items-center justify-center gap-2 w-full border-2 border-orange-400 text-orange-500 hover:bg-orange-50 font-bold py-3 rounded-xl transition-colors text-sm"
           >
             <LinkOutlined />
             Xem trên Chợ Tốt
